@@ -1,9 +1,8 @@
-import email, smtplib, ssl
-from email import encoders
-from email.mime.base import MIMEBase
+import email, smtplib, ssl, sys
 from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+
+orderno = sys.argv[1]
 
 smtp_server = "smtp.office365.com"
 port = 587
@@ -23,8 +22,8 @@ message["To"] = reciever
 html = f"""\
 <html>
   <body>
-    <p>Thank you for your order!<br>
-      Please leave us a review on <a href="https://uk.trustpilot.com/review/glassandstainlessuk.co.uk">TrustPilot</a><br>
+    <p>Thank you for your order, {orderno}!<br>
+      Please leave us a review on <a href="https://uk.trustpilot.com/review/glassandstainlessuk.co.uk">TrustPilot</a><br><br>
       <img src="data:image/png;base64,{company_logo}" alt="Glass + Stainless"/>
     </p>
   </body>
