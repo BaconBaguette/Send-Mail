@@ -16,8 +16,8 @@ try:
 except:
   job_email = ''
 
-smtp_server = "smtp.office365.com"
-port = 587
+smtp_server = environ.get("SMTP_SERVER")
+port = environ.get("SMTP_PORT")
 
 if job_email != '':
   reciever = job_email
@@ -30,6 +30,8 @@ password = environ.get("OUTLOOK_KEY")
 # base64 encoded image
 company_logo_b64 = environ.get("COMPANY_LOGO_B64")
 company_logo_link = environ.get("COMPANY_LOGO_LINK")
+company_trustpilot_link = environ.get("COMPANY_TRUSTPILOT_LINK")
+company_name = environ.get("COMPANY_NAME")
 
 message = MIMEMultipart("alternative")
 message["Subject"] = f"Invoice Confirmation - {orderno}"
@@ -40,8 +42,8 @@ html_gmail = f"""\
 <html>
   <body>
     <p>Thank you for your order, {orderno}!<br>
-      Please leave us a review on <a href="https://uk.trustpilot.com/review/glassandstainlessuk.co.uk">TrustPilot</a><br><br>
-      <img src="{company_logo_link}" alt="Glass + Stainless" title="Logo"/>
+      Please leave us a review on <a href="{company_trustpilot_link}">TrustPilot</a><br><br>
+      <img src="{company_logo_link}" alt="{company_name}" title="Logo"/>
     </p>
   </body>
 </html>
@@ -51,8 +53,8 @@ html_other = f"""\
 <html>
   <body>
     <p>Thank you for your order, {orderno}!<br>
-      Please leave us a review on <a href="https://uk.trustpilot.com/review/glassandstainlessuk.co.uk">TrustPilot</a><br><br>
-      <img src="data:image/png;base64,{company_logo_b64}" alt="Glass + Stainless" title="Logo"/>
+      Please leave us a review on <a href="{company_trustpilot_link}">TrustPilot</a><br><br>
+      <img src="data:image/png;base64,{company_logo_b64}" alt="{company_name}" title="Logo"/>
     </p>
   </body>
 </html>
@@ -61,9 +63,9 @@ html_other = f"""\
 # This will be used in place of the HTML if it can't be rendered for any reason
 text = f"""\
 Thank you for your order, {orderno}!
-Please leave us a review on TrustPilot - https://uk.trustpilot.com/review/glassandstainlessuk.co.uk
+Please leave us a review on TrustPilot - {company_trustpilot_link}
 
-Glass + Stainless"""
+{company_name}"""
 
 part1 = MIMEText(text, "text")
 part2 = MIMEText(html_other, "html")
